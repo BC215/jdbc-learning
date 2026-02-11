@@ -78,12 +78,13 @@ public class TransactionDemo {
      */
     private static void demonstrateRollback() {
         Connection conn = null;
+        PreparedStatement pstmt = null;
         
         try {
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
             conn.setAutoCommit(false);
             
-            PreparedStatement pstmt = conn.prepareStatement(
+            pstmt = conn.prepareStatement(
                 "INSERT INTO employees (emp_id, name, salary) VALUES (?, ?, ?)");
             
             pstmt.setInt(1, 500);
@@ -110,6 +111,7 @@ public class TransactionDemo {
             }
         } finally {
             try {
+                if (pstmt != null) pstmt.close();
                 if (conn != null) {
                     conn.setAutoCommit(true);
                     conn.close();

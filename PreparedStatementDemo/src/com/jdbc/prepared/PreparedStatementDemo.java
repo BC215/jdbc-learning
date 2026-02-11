@@ -79,10 +79,13 @@ public class PreparedStatementDemo {
      * Batch processing for efficient bulk operations
      */
     private static void demonstrateBatchProcessing() {
-        String sql = "INSERT INTO employees (emp_id, name, salary) VALUES (?, ?, ?)";
+        Connection conn = null;
+        PreparedStatement pstmt = null;
         
-        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try {
+            conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            String sql = "INSERT INTO employees (emp_id, name, salary) VALUES (?, ?, ?)";
+            pstmt = conn.prepareStatement(sql);
             
             // Disable auto-commit for batch
             conn.setAutoCommit(false);
@@ -103,6 +106,23 @@ public class PreparedStatementDemo {
             
         } catch (Exception e) {
             System.err.println("Batch error: " + e.getMessage());
+            if (conn != null) {
+                try {
+                    conn.rollback();
+                } catch (Exception ex) {
+                    System.err.println("Rollback failed: " + ex.getMessage());
+                }
+            }
+        } finally {
+            try {
+                if (pstmt != null) pstmt.close();
+                if (conn != null) {
+                    conn.setAutoCommit(true);
+                    conn.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }
