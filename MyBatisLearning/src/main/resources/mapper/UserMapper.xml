@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.mybatis.mapper.UserMapper">
+  
+  <!-- Result Map -->
+  <resultMap id="UserResultMap" type="User">
+    <id property="id" column="id"/>
+    <result property="username" column="username"/>
+    <result property="email" column="email"/>
+    <result property="age" column="age"/>
+  </resultMap>
+  
+  <!-- Select by ID -->
+  <select id="selectUserById" parameterType="int" resultMap="UserResultMap">
+    SELECT id, username, email, age
+    FROM users
+    WHERE id = #{id}
+  </select>
+  
+  <!-- Select all users -->
+  <select id="selectAllUsers" resultMap="UserResultMap">
+    SELECT id, username, email, age
+    FROM users
+    ORDER BY id
+  </select>
+  
+  <!-- Select users by age range -->
+  <select id="selectUsersByAgeRange" resultMap="UserResultMap">
+    SELECT id, username, email, age
+    FROM users
+    WHERE age BETWEEN #{param1} AND #{param2}
+    ORDER BY age
+  </select>
+  
+  <!-- Insert user -->
+  <insert id="insertUser" parameterType="User">
+    INSERT INTO users (id, username, email, age)
+    VALUES (#{id}, #{username}, #{email}, #{age})
+  </insert>
+  
+  <!-- Update user -->
+  <update id="updateUser" parameterType="User">
+    UPDATE users
+    SET username = #{username},
+        email = #{email},
+        age = #{age}
+    WHERE id = #{id}
+  </update>
+  
+  <!-- Delete user -->
+  <delete id="deleteUser" parameterType="int">
+    DELETE FROM users
+    WHERE id = #{id}
+  </delete>
+  
+</mapper>
