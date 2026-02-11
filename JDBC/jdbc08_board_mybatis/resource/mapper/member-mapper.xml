@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.iei.member.dao.MemberDao">
+
+    <!-- 전체 회원 조회 -->
+    <select id="selectAllMember" resultType="member">
+        SELECT member_no, member_id, member_pw, member_name, member_phone, enroll_date
+        FROM member
+    </select>
+
+    <!-- ID로 회원 조회 -->
+    <select id="selectMemberById" parameterType="string" resultType="member">
+        SELECT member_no, member_id, member_pw, member_name, member_phone, enroll_date
+        FROM member
+        WHERE member_id = #{memberId}
+    </select>
+
+    <!-- 회원 등록 -->
+    <insert id="insertMember" parameterType="member">
+        INSERT INTO member(member_no, member_id, member_pw, member_name, member_phone, enroll_date)
+        VALUES (member_seq.NEXTVAL, #{memberId}, #{memberPw}, #{memberName}, #{memberPhone}, SYSDATE)
+    </insert>
+
+    <!-- 회원 정보 수정 -->
+    <update id="updateMember" parameterType="member">
+        UPDATE member
+        SET member_pw = #{memberPw},
+            member_name = #{memberName},
+            member_phone = #{memberPhone}
+        WHERE member_id = #{memberId}
+    </update>
+
+    <!-- 회원 삭제 -->
+    <delete id="deleteMember" parameterType="string">
+        DELETE FROM member
+        WHERE member_id = #{memberId}
+    </delete>
+
+</mapper>
